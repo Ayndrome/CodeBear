@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: codedolphin-metrics
+  namespace: codedolphin
+  labels:
+    app: codedolphin
+    release: kube-prometheus
+spec:
+  selector:
+    matchLabels:
+      app: codedolphin
+  namespaceSelector:
+    matchNames:
+      - codedolphin
+  endpoints:
+    - port: http
+      path: /api/metrics
+      interval: 30s
+      scrapeTimeout: 10s
