@@ -16,6 +16,7 @@
     <a href="#quickstart">Get Started</a> &nbsp;&bull;&nbsp;
     <a href="./docs/ARCHITECTURE.md">Architecture</a> &nbsp;&bull;&nbsp;
     <a href="./docs/DIAGRAMS.md">Diagrams</a> &nbsp;&bull;&nbsp;
+    <a href="./docs/DEPLOYMENT.md">Deployment</a> &nbsp;&bull;&nbsp;
     <a href="#api">API Reference</a>
   </p>
 
