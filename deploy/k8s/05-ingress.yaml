@@ -1,0 +1,54 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: codedolphin-web
+  namespace: codedolphin
+  annotations:
+    alb.ingress.kubernetes.io/group.name: codedolphin
+    alb.ingress.kubernetes.io/group.order: '10'
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-north-1:638175212878:certificate/3b0b5c40-82a1-4265-8fb8-e77e1358472d
+spec:
+  ingressClassName: alb
+  rules:
+    - host: codebear.space
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: codedolphin-web
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana
+  namespace: monitoring
+  annotations:
+    alb.ingress.kubernetes.io/group.name: codedolphin
+    alb.ingress.kubernetes.io/group.order: '20'
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-north-1:638175212878:certificate/3b0b5c40-82a1-4265-8fb8-e77e1358472d
+    alb.ingress.kubernetes.io/healthcheck-path: /api/health
+spec:
+  ingressClassName: alb
+  rules:
+    - host: grafana.codebear.space
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kube-prometheus-grafana
+                port:
+                  number: 80

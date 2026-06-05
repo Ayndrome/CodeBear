@@ -1,0 +1,15 @@
+# Non-secret defaults. Override per environment if needed.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: codedolphin-config
+  namespace: codedolphin
+  labels:
+    app: codedolphin
+data:
+  NODE_ENV: "production"
+  # Host header / trust proxy — tune if behind AWS ALB + Ingress
+  HOSTNAME: "0.0.0.0"
+  # In-cluster Redis (deploy/k8s/08-redis.yaml) — Service name `redis`
+  REDIS_HOST: "redis"
+  REDIS_PORT: "6379"
