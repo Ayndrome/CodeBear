@@ -127,6 +127,12 @@ See the full data flow in [ARCHITECTURE.md](./docs/ARCHITECTURE.md).
 
 ---
 
+## CI/CD Pipeline
+
+![Jenkins pipeline run #13 — Docker build & push to ECR (16s) followed by Deploy to AWS EKS (3m 27s)](./public/jenkins.png)
+
+Two-stage Jenkins pipeline: builds a multi-stage Docker image, pushes to AWS ECR, then rolls out to EKS with `kubectl set image` and waits for rollout completion. Full details in [DEPLOYMENT.md](./docs/DEPLOYMENT.md).
+
 ## Review Comment Output
 
 CodeBear posts a structured Markdown comment on every PR:
@@ -243,6 +249,8 @@ Logs are structured JSON via Pino with correlation IDs. Traces propagate end-to-
 
 ---
 
+![Grafana dashboard showing node CPU/memory, pod status, HTTP request rate, review duration, GitHub API rate limit, cache hit rate, and circuit breaker states](./public/grafana_dashboard.png)
+
 ## Deployment
 
 ### Vercel (recommended)
@@ -277,6 +285,8 @@ readinessProbe:
 ```
 
 ---
+
+
 
 ## Documentation
 
