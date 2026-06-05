@@ -1,0 +1,85 @@
+pipeline {
+  agent any
+
+  environment {
+    AWS_REGION           = 'eu-north-1'
+    ECR_REPOSITORY       = 'codedolphin-web'
+    K8S_NAMESPACE        = 'codedolphin'
+    DEPLOYMENT_NAME      = 'codedolphin-web'
+    CLUSTER_NAME         = 'codedolphin-eks'
+    NEXT_PUBLIC_APP_URL  = 'https://codebear.space'
+  }
+
+  parameters {
+    string(name: 'IMAGE_TAG', defaultValue: '', description: 'Leave empty to use short Git SHA')
+    booleanParam(name: 'SKIP_TESTS', defaultValue: false, description: 'Skip npm ci / lint / unit tests')
+  }
+
+  stages {
+    stage('Docker build & push to ECR') {
+      steps {
+        withCredentials([[
+          $class: 'AmazonWebServicesCredentialsBinding',
+          credentialsId: 'aws-credentials',
+          accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+          secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+        ]]) {
+          sh """#!/bin/bash
+            set -euo pipefail
+            TAG='${params.IMAGE_TAG}'
+            if [ -z "\$TAG" ]; then TAG=\$(git rev-parse --short HEAD); fi
+
+            AWS_ACCOUNT_ID=\$(aws sts get-caller-identity --query Account --output text)
+            ECR_REGISTRY="\${AWS_ACCOUNT_ID}.dkr.ecr.\${AWS_REGION}.amazonaws.com"
+            FULL_IMAGE="\${ECR_REGISTRY}/\${ECR_REPOSITORY}:\${TAG}"
+
+            aws ecr describe-repositories --repository-names "\${ECR_REPOSITORY}" --region "\${AWS_REGION}" 2>/dev/null || \
+              aws ecr create-repository --repository-name "\${ECR_REPOSITORY}" --region "\${AWS_REGION}"
+
+            aws ecr get-login-password --region "\${AWS_REGION}" | \
+              docker login --username AWS --password-stdin "\${ECR_REGISTRY}"
+              
+            cd /codedolphin
+            
+            docker build \\
+              --build-arg NEXT_PUBLIC_APP_URL="${env.NEXT_PUBLIC_APP_URL}" \\
+              -t "\${ECR_REPOSITORY}:\${TAG}" .
+
+            docker tag "\${ECR_REPOSITORY}:\${TAG}" "\${FULL_IMAGE}"
+            docker push "\${FULL_IMAGE}"
+
+            # FIX: Write env tracking file to shared system temporary folder
+            echo "TAG=\${TAG}" > /tmp/.codebear-image.env
+            echo "FULL_IMAGE=\${FULL_IMAGE}" >> /tmp/.codebear-image.env
+          """
+        }
+      }
+    }
+
+    stage('Deploy to AWS EKS') {
+      steps {
+        withCredentials([[
+          $class: 'AmazonWebServicesCredentialsBinding',
+          credentialsId: 'aws-credentials',
+          accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+          secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+        ]]) {
+          sh '''#!/bin/bash
+            set -euo pipefail
+            
+            # FIX: Read env tracking variables from shared temporary folder
+            . /tmp/.codebear-image.env
+
+            aws eks update-kubeconfig --name "${CLUSTER_NAME}" --region "${AWS_REGION}"
+
+           kubectl set image deployment/${DEPLOYMENT_NAME} \
+  web="${FULL_IMAGE}" \
+  -n "${K8S_NAMESPACE}"
+
+            kubectl rollout status deployment/${DEPLOYMENT_NAME} -n "${K8S_NAMESPACE}" --timeout=300s
+          '''
+        }
+      }
+    }
+  }
+}
