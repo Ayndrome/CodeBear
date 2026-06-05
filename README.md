@@ -22,7 +22,7 @@
 
   <br />
 
-  <img src="./public/ss_01.png" alt="CodeBear Dashboard" width="100%" style="border-radius: 8px;" />
+  <img src="./public//ss_011.png" alt="CodeBear Dashboard" width="100%" style="border-radius: 8px;" />
 
 </div>
 
@@ -45,7 +45,8 @@ It combines **AST-based static analysis** with **Gemini LLM intelligence** to po
       <p align="center"><em>Automated PR review comment with scores and diagrams</em></p>
     </td>
     <td width="50%">
-      <img src="./public/ss_03.png" alt="Review Dashboard" width="100%" />
+      <img src="./public/ss_04.png" alt="Review Dashboard" width="100%" />
+
       <p align="center"><em>Repository review history and analytics</em></p>
     </td>
   </tr>
