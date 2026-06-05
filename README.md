@@ -46,7 +46,6 @@ It combines **AST-based static analysis** with **Gemini LLM intelligence** to po
     </td>
     <td width="50%">
       <img src="./public/ss_04.png" alt="Review Dashboard" width="100%" />
-
       <p align="center"><em>Repository review history and analytics</em></p>
     </td>
   </tr>
