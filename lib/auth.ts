@@ -4,14 +4,17 @@ import { dash } from "@better-auth/infra";
 import prisma from "./db";
 import { nextCookies } from "better-auth/next-js";
 
+function normalizeBaseUrl(value: string) {
+    return value.replace(/\/+$/, "");
+}
+
 function getAppBaseUrl() {
-    // Prefer the public app URL (works for localhost + ngrok).
-    // Fallback to BETTER_AUTH_URL for older setups.
-    return (
-        
+    const raw =
+        process.env.NEXT_PUBLIC_APP_URL ||
         process.env.BETTER_AUTH_URL ||
-        "http://k8s-codedolp-codedolp-a07ad3d88a-1921579919.eu-north-1.elb.amazonaws.com"
-    );
+        "https://codebear.space";
+
+    return normalizeBaseUrl(raw);
 }
 
 export const auth = betterAuth({
@@ -24,7 +27,7 @@ export const auth = betterAuth({
     
     trustedOrigins: [
         "http://localhost:3000",
-        "http://k8s-codedolp-codedolp-a07ad3d88a-1921579919.eu-north-1.elb.amazonaws.com",
+        "https://codebear.space",
     ],
     emailAndPassword: {
         enabled: true,
