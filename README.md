@@ -1,177 +1,155 @@
-# 🐬 CodeDolphin
+<div align="center">
+  <img src="./public/codedolphinn.svg" alt="CodeBear Logo" width="120" height="120" />
 
-**Enterprise-Grade AI Code Review Platform for React, Next.js & TypeScript**
+  <h1>CodeBear</h1>
+  <p><strong>Enterprise-Grade AI Code Review Platform for React, Next.js & TypeScript</strong></p>
 
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
-[![Next.js](https://img.shields.io/badge/Next.js-15-black.svg)](https://nextjs.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+  <p>
+    <img src="https://img.shields.io/badge/TypeScript-5.0-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" />
+    <img src="https://img.shields.io/badge/Next.js-15-000000?style=flat-square&logo=next.js&logoColor=white" alt="Next.js" />
+    <img src="https://img.shields.io/badge/Redis-7.0-DC382D?style=flat-square&logo=redis&logoColor=white" alt="Redis" />
+    <img src="https://img.shields.io/badge/PostgreSQL-14-4169E1?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL" />
+    <img src="https://img.shields.io/badge/License-MIT-22C55E?style=flat-square" alt="MIT License" />
+  </p>
 
-> A production-ready code review platform with enterprise-grade infrastructure including distributed tracing, circuit breakers, dead letter queues, and comprehensive observability.
+  <p>
+    <a href="#quickstart">Get Started</a> &nbsp;&bull;&nbsp;
+    <a href="./docs/ARCHITECTURE.md">Architecture</a> &nbsp;&bull;&nbsp;
+    <a href="./docs/DIAGRAMS.md">Diagrams</a> &nbsp;&bull;&nbsp;
+    <a href="#api">API Reference</a>
+  </p>
 
-## 🌟 Highlights
+  <br />
 
-- **🏗️ Enterprise Architecture**: Circuit breakers, retry logic, dead letter queues
-- **📊 Full Observability**: Prometheus metrics, OpenTelemetry tracing, Sentry error tracking
-- **⚡ High Performance**: Redis caching, rate limiting, queue-based processing
-- **🔒 Security First**: Secret scanning, vulnerability detection, IP allowlisting
-- **🤖 AI-Powered**: LLM-based code analysis with Gemini integration
-- **📈 Production Ready**: Health checks, alerting, structured logging
+  <img src="./public/ss_01.png" alt="CodeBear Dashboard" width="100%" style="border-radius: 8px;" />
 
----
-
-## 📋 Table of Contents
-
-- [Features](#-features)
-- [Architecture](#-architecture)
-- [Tech Stack](#-tech-stack)
-- [Quick Start](#-quick-start)
-- [Infrastructure](#-infrastructure)
-- [Observability](#-observability)
-- [Security](#-security)
-- [API Documentation](#-api-documentation)
-- [Deployment](#-deployment)
-- [Contributing](#-contributing)
+</div>
 
 ---
 
-## ✨ Features
+## What is CodeBear?
 
-### Core Functionality
+CodeBear connects to your GitHub repositories and automatically reviews every pull request — catching React hook mistakes, server/client boundary violations, missing image optimizations, exposed secrets, and vulnerable dependencies before they reach production.
 
-- **🔍 Static Analysis**
-  - AST-based code analysis for React, Next.js, and TypeScript
-  - 30+ built-in rules (hooks, server/client patterns, performance, security)
-  - Custom rule engine with regex and AST matching
-  - Real-time code quality metrics
+It combines **AST-based static analysis** with **Gemini LLM intelligence** to post rich, actionable review comments directly on your PRs, complete with architecture diagrams and severity-scored findings.
 
-- **🤖 AI-Powered Reviews**
-  - LLM integration (Gemini) for intelligent code analysis
-  - Automatic summary generation
-  - Architecture diagram creation (Mermaid)
-  - Context-aware suggestions
+---
 
-- **📊 GitHub Integration**
-  - Automatic PR review comments
-  - Webhook-based event processing
-  - Multi-repository support
-  - Team collaboration features
+## Screenshots
+
+<table>
+  <tr>
+    <td width="50%">
+      <img src="./public/ss_02.png" alt="PR Review Comment" width="100%" />
+      <p align="center"><em>Automated PR review comment with scores and diagrams</em></p>
+    </td>
+    <td width="50%">
+      <img src="./public/ss_03.png" alt="Review Dashboard" width="100%" />
+      <p align="center"><em>Repository review history and analytics</em></p>
+    </td>
+  </tr>
+</table>
+
+---
+
+## Key Features
+
+### Code Analysis
+- AST-based analysis for React, Next.js, and TypeScript
+- 30+ built-in rules covering hooks, server/client patterns, performance, and security
+- Detects missing `useEffect` dependencies, bad image usage, and server component violations
+- Custom rule engine with regex and AST pattern matching
+
+### AI-Powered Reviews
+- Gemini LLM integration for intelligent, context-aware suggestions
+- Automatic PR summary generation with quality scoring (A–F)
+- Four diagram types generated per review: sequence, component hierarchy, dependency graph, state flow
+- Human-readable explanations alongside static findings
 
 ### Enterprise Infrastructure
+- Event-driven queue system via **Inngest** with automatic retries
+- Multi-layer **Redis** caching (5 min – 2 hr TTL tiers)
+- Circuit breakers for GitHub API, LLM, and database
+- Dead letter queue with exponential backoff for failed events
+- Full **Prometheus** metrics, **OpenTelemetry** tracing, **Sentry** error tracking
 
-- **⚡ Scalability**
-  - Queue system with Inngest (event-driven architecture)
-  - Multi-layer Redis caching strategy
-  - Rate limiting with sliding window algorithm
-  - Horizontal scaling support
-
-- **🛡️ Reliability**
-  - Circuit breakers for external services (GitHub, LLM, webhooks)
-  - Retry logic with exponential backoff and jitter
-  - Dead letter queue for failed events
-  - Health checks (database, Redis, GitHub API, memory, disk)
-
-- **📈 Observability**
-  - Structured logging with Pino (JSON + correlation IDs)
-  - Error tracking with Sentry (performance monitoring + session replay)
-  - Prometheus metrics (25+ custom metrics)
-  - Distributed tracing with OpenTelemetry
-  - Alerting via Slack and PagerDuty
-
-- **🔒 Security & Compliance**
-  - Secret scanning with pattern detection
-  - Vulnerability scanning for dependencies
-  - IP allowlisting with CIDR support
-  - Data retention policies
-  - Encryption key management
+### Security
+- Secret scanning: AWS keys, GitHub tokens, API keys, private keys, DB credentials
+- Dependency vulnerability scanning with CVE detection
+- IP allowlisting with CIDR support
+- RBAC, session management, and API key controls
 
 ---
 
-## 🏗️ Architecture
+## Tech Stack
 
-### System Overview
+| Layer | Technology |
+|---|---|
+| Frontend | Next.js 15, TypeScript, Tailwind CSS, shadcn/ui |
+| Backend API | tRPC, Node.js |
+| Database | PostgreSQL + Prisma ORM |
+| Cache | Redis (ioredis) |
+| Queue | Inngest |
+| AI | Google Gemini |
+| Code Analysis | TypeScript Compiler API / typescript-estree |
+| Logging | Pino (structured JSON) |
+| Error Tracking | Sentry |
+| Metrics | Prometheus (prom-client) |
+| Tracing | OpenTelemetry |
+| Hosting | Vercel + Supabase |
+
+---
+
+## How It Works
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                         GitHub Webhook                          │
-└────────────────────────────┬────────────────────────────────────┘
-                             │
-                             ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                    API Gateway (Next.js)                        │
-│  • Rate Limiting  • Auth  • Routing  • Circuit Breakers         │
-└────────────────────────────┬────────────────────────────────────┘
-                             │
-        ┌────────────────────┼────────────────────┐
-        │                    │                    │
-        ▼                    ▼                    ▼
-┌──────────────┐    ┌──────────────┐    ┌──────────────┐
-│   Queue      │    │   Cache      │    │  Database    │
-│  (Inngest)   │    │  (Redis)     │    │ (PostgreSQL) │
-└──────┬───────┘    └──────────────┘    └──────────────┘
-       │
-       ▼
-┌──────────────────────────────────────────────────────────┐
-│                    Background Jobs                        │
-│  • Code Review  • Secret Scan  • Vuln Scan  • Analytics  │
-└──────────────────────────────────────────────────────────┘
-       │
-       ▼
-┌──────────────────────────────────────────────────────────┐
-│                  Observability Stack                      │
-│  • Logs (Pino)  • Metrics (Prometheus)  • Traces (OTEL)  │
-│  • Errors (Sentry)  • Alerts (Slack/PagerDuty)           │
-└──────────────────────────────────────────────────────────┘
+Developer opens PR on GitHub
+        |
+        v
+GitHub sends webhook  -->  CodeBear API Gateway
+                                |
+                    +-----------+----------+
+                    |           |          |
+                 Queue       Cache       Database
+               (Inngest)    (Redis)   (PostgreSQL)
+                    |
+                    v
+          Background Job Processor
+          1. Fetch changed files (GitHub API)
+          2. Parse to AST
+          3. Run 30+ static rules
+          4. Generate LLM review + diagrams
+          5. Post formatted comment to PR
 ```
 
-### Data Flow
-
-1. **GitHub Webhook** → Triggers on PR events
-2. **API Gateway** → Rate limiting, authentication, circuit breakers
-3. **Queue System** → Async job processing with Inngest
-4. **Code Analysis** → AST parsing + static rules + LLM analysis
-5. **Caching Layer** → Redis for performance optimization
-6. **Database** → PostgreSQL for persistent storage
-7. **Observability** → Logs, metrics, traces, alerts
+See the full data flow in [ARCHITECTURE.md](./docs/ARCHITECTURE.md).
 
 ---
 
-## 🛠️ Tech Stack
+## Review Comment Output
 
-### Frontend
-- **Framework**: Next.js 15 (App Router)
-- **Language**: TypeScript 5.0
-- **Styling**: Tailwind CSS
-- **UI Components**: shadcn/ui
-- **State Management**: React Query (tRPC)
+CodeBear posts a structured Markdown comment on every PR:
 
-### Backend
-- **Runtime**: Node.js
-- **API**: tRPC (type-safe APIs)
-- **Database**: PostgreSQL (Prisma ORM)
-- **Cache**: Redis (ioredis)
-- **Queue**: Inngest (event-driven)
+```
+CodeBear Review
 
-### Infrastructure
-- **Logging**: Pino (structured JSON logs)
-- **Error Tracking**: Sentry (performance + session replay)
-- **Metrics**: Prometheus (prom-client)
-- **Tracing**: OpenTelemetry (OTLP exporter)
-- **Alerting**: Slack + PagerDuty
+Overall Score: C  (Issues: 3 critical, 5 high, 10 medium)
 
-### AI/ML
-- **LLM**: Google Gemini
-- **Code Analysis**: TypeScript Compiler API
-- **Diagrams**: Mermaid.js
+Visual Analysis
+  - Sequence diagram: data flow through components
+  - Component hierarchy: parent-child relationships
+  - Dependency graph: import/export map
+  - State flow: useState/useReducer transitions
 
-### DevOps
-- **Hosting**: Vercel
-- **Database**: Supabase / Railway
-- **Monitoring**: Grafana + Jaeger
-- **CI/CD**: GitHub Actions
+Issues Found (3)
+  [ERROR] hooks/exhaustive-deps — Missing dependency: userId (Dashboard.tsx:45)
+  [WARN]  next/image — Use <Image> from next/image instead of <img> (Dashboard.tsx:62)
+  [ERROR] server-component — Browser API used in Server Component (Layout.tsx:18)
+```
 
 ---
 
-## 🚀 Quick Start
+<h2 id="quickstart">Quick Start</h2>
 
 ### Prerequisites
 
@@ -179,39 +157,32 @@
 - PostgreSQL 14+
 - Redis 7+
 - GitHub App credentials
+- Google Gemini API key
 
 ### Installation
 
 ```bash
-# Clone repository
-git clone https://github.com/yourusername/codedolphin.git
-cd codedolphin
+# Clone the repo
+git clone https://github.com/yourusername/codebear.git
+cd codebear
 
 # Install dependencies
 npm install
 
-# Setup environment variables
+# Copy environment template
 cp .env.example .env.local
-# Edit .env.local with your credentials
-
-# Setup database
-npx prisma generate
-npx prisma db push
-
-# Run development server
-npm run dev
 ```
 
 ### Environment Variables
 
-```bash
+```env
 # Database
-DATABASE_URL="postgresql://user:password@localhost:5432/codedolphin"
+DATABASE_URL="postgresql://user:password@localhost:5432/codebear"
 
 # Redis
 REDIS_URL="redis://localhost:6379"
 
-# GitHub
+# GitHub App
 GITHUB_CLIENT_ID="your_github_app_client_id"
 GITHUB_CLIENT_SECRET="your_github_app_client_secret"
 GITHUB_WEBHOOK_SECRET="your_webhook_secret"
@@ -221,505 +192,142 @@ GITHUB_PRIVATE_KEY="your_private_key"
 # AI
 GEMINI_API_KEY="your_gemini_api_key"
 
-# Observability
+# Observability (optional but recommended)
 SENTRY_DSN="https://xxx@xxx.ingest.sentry.io/xxx"
-SENTRY_TRACES_SAMPLE_RATE="0.1"
 OTEL_EXPORTER_OTLP_ENDPOINT="http://localhost:4318/v1/traces"
-
-# Alerting
 SLACK_WEBHOOK_URL="https://hooks.slack.com/services/xxx"
-PAGERDUTY_INTEGRATION_KEY="your_pagerduty_key"
-
-# App
-NEXT_PUBLIC_APP_URL="http://localhost:3000"
-LOG_LEVEL="info"
 ```
 
----
-
-## 🏗️ Infrastructure
-
-### Queue System (Inngest)
-
-**Event-driven architecture for async processing:**
-
-```typescript
-// Trigger code review
-await triggerCodeReview({
-  repositoryId: 'repo-123',
-  prNumber: 42,
-  userId: 'user-456'
-});
-
-// Events automatically processed in background
-// - Code analysis
-// - Secret scanning
-// - Vulnerability scanning
-// - Notification sending
-```
-
-**Features:**
-- Automatic retries with exponential backoff
-- Event replay for debugging
-- Step-based execution
-- Built-in monitoring
-
-### Caching Strategy (Redis)
-
-**Multi-layer caching for performance:**
-
-```typescript
-// Generic cache
-await cache.set('key', data, 3600); // 1 hour TTL
-
-// Domain-specific caches
-await cacheReview(reviewId, reviewData, 1800);
-await cacheRepository(repoId, repoData, 3600);
-await cacheUser(userId, userData, 7200);
-```
-
-**Cache Patterns:**
-- Review results (30 min)
-- Repository data (1 hour)
-- User data (2 hours)
-- GitHub API responses (5 min)
-- LLM responses (1 hour)
-
-### Rate Limiting
-
-**Sliding window algorithm with Redis:**
-
-```typescript
-// API rate limiting
-await checkRateLimit(userId, 'api', 100, 60000); // 100 req/min
-
-// Feature-specific limits
-await checkReviewRateLimit(userId);     // 50 reviews/hour
-await checkGitHubAPIRateLimit(userId);  // 1000 calls/hour
-```
-
-### Circuit Breakers
-
-**Graceful degradation for external services:**
-
-```typescript
-// GitHub API with circuit breaker
-const data = await githubCircuitBreaker.execute(() =>
-  fetch('https://api.github.com/...')
-);
-
-// Pre-configured breakers:
-// - GitHub API (5 failures, 1min timeout)
-// - LLM API (3 failures, 30s timeout)
-// - Webhooks (10 failures, 2min timeout)
-// - Database (3 failures, 10s timeout)
-```
-
-### Retry Logic
-
-**Exponential backoff with jitter:**
-
-```typescript
-// Automatic retry with backoff
-const result = await retryWithBackoff(
-  () => apiCall(),
-  {
-    maxAttempts: 3,
-    initialDelay: 1000,
-    maxDelay: 10000,
-  }
-);
-
-// Pre-configured strategies:
-// - GitHub API: 3 attempts, 2s-10s
-// - LLM API: 3 attempts, 1s-15s
-// - Database: 3 attempts, 500ms-5s
-```
-
-### Dead Letter Queue
-
-**Handle failed events:**
-
-```typescript
-// Execute with DLQ fallback
-await executeWithDLQ(
-  'code-review/process',
-  { repositoryId, prNumber },
-  () => processReview(),
-  3 // max attempts
-);
-
-// Failed events stored for retry
-// - Automatic retry scheduling
-// - Exponential backoff (1min to 1hour)
-// - Manual retry support
-```
-
----
-
-## 📊 Observability
-
-### Structured Logging (Pino)
-
-**JSON logs with correlation IDs:**
-
-```typescript
-import { createReviewLogger } from '@/lib/logger';
-
-const log = createReviewLogger(repoId, prNumber, userId);
-log.info({ event: 'review_started' });
-log.error({ err: error }, 'Review failed');
-```
-
-**Output:**
-```json
-{
-  "level": "info",
-  "time": "2026-01-03T10:00:00.000Z",
-  "correlationId": "uuid-1234",
-  "component": "review",
-  "repositoryId": "repo-123",
-  "prNumber": 42,
-  "userId": "user-456",
-  "event": "review_started",
-  "msg": "Review started"
-}
-```
-
-### Error Tracking (Sentry)
-
-**Automatic error capture with context:**
-
-```typescript
-import { captureException } from '@/lib/monitoring/sentry';
-
-try {
-  await processReview();
-} catch (error) {
-  captureException(error, {
-    level: 'error',
-    tags: { component: 'review' },
-    extra: { repositoryId, prNumber },
-    user: { id: userId }
-  });
-}
-```
-
-**Features:**
-- Performance monitoring
-- Session replay
-- Breadcrumb trails
-- Release tracking
-
-### Metrics (Prometheus)
-
-**25+ custom metrics:**
-
-```typescript
-import { trackReview, trackHTTPRequest } from '@/lib/monitoring/metrics';
-
-// Track review
-trackReview('owner/repo', 'completed', 5000, {
-  critical: 2,
-  high: 5,
-  medium: 10,
-  low: 3
-});
-
-// Track HTTP request
-trackHTTPRequest('POST', '/api/reviews', 200, 150);
-```
-
-**Metrics Categories:**
-- HTTP requests (total, duration, in-progress)
-- Code reviews (total, duration, issues found)
-- GitHub API (calls, duration, rate limit)
-- LLM API (calls, duration, tokens)
-- Database (queries, duration, connections)
-- Cache (hits, misses, duration)
-- Circuit breakers (state, failures)
-
-**Access metrics:**
-```bash
-curl http://localhost:3000/api/metrics
-```
-
-### Distributed Tracing (OpenTelemetry)
-
-**End-to-end request tracing:**
-
-```typescript
-import { traceCodeReview } from '@/lib/monitoring/tracing';
-
-await traceCodeReview(repositoryId, prNumber, async () => {
-  // Automatically traced
-  const files = await fetchFiles();
-  const analysis = await analyzeCode(files);
-  const review = await generateReview(analysis);
-  return review;
-});
-```
-
-**View traces:**
-- Jaeger UI: `http://localhost:16686`
-- See complete request flow
-- Identify bottlenecks
-- Debug distributed issues
-
-### Alerting (Slack/PagerDuty)
-
-**Automatic alerts for critical events:**
-
-```typescript
-import { alertHealthCheckFailure } from '@/lib/monitoring/alerting';
-
-// Alert on service failure
-await alertHealthCheckFailure('database', 'Connection timeout');
-
-// Alert on circuit breaker
-await alertCircuitBreakerOpen('github-api', 5);
-```
-
-**Alert Routing:**
-- **CRITICAL** → PagerDuty + Slack
-- **ERROR** → Slack
-- **WARNING** → Slack (if configured)
-- **INFO** → Logs only
-
-### Health Checks
-
-**Monitor system health:**
+### Run
 
 ```bash
-# Full health check
-curl http://localhost:3000/api/health
+# Setup database schema
+npx prisma generate
+npx prisma db push
 
-# Readiness probe (K8s)
-curl http://localhost:3000/api/health/ready
-
-# Liveness probe (K8s)
-curl http://localhost:3000/api/health/live
+# Start development server
+npm run dev
 ```
 
-**Checks:**
-- Database connectivity
-- Redis connectivity
-- GitHub API availability
-- Memory usage
-- Disk space
+Open [http://localhost:3000](http://localhost:3000).
+
+### Connect GitHub
+
+1. Create a GitHub App (or use a personal webhook for testing)
+2. Point the webhook payload URL to `/api/webhooks/github`
+3. Set content type to `application/json` and select **Pull requests** events
+4. For local testing, expose your server with [ngrok](https://ngrok.com): `ngrok http 3000`
+
+Full setup walkthrough: [QUICKSTART.md](./docs/QUICKSTART.md)
 
 ---
 
-## 🔒 Security
+## Observability
 
-### Secret Scanning
-
-**Detect secrets in code:**
-
-```typescript
-import { scanForSecrets } from '@/lib/services/secret-scanning-service';
-
-const results = await scanForSecrets(repositoryId, code);
-// Detects: API keys, tokens, passwords, private keys
-```
-
-**Patterns Detected:**
-- AWS keys
-- GitHub tokens
-- API keys
-- Private keys
-- Database credentials
-- OAuth tokens
-
-### Vulnerability Scanning
-
-**Scan dependencies for vulnerabilities:**
-
-```typescript
-import { scanDependencies } from '@/lib/services/vulnerability-scanning-service';
-
-const vulns = await scanDependencies(repositoryId, packageJson);
-// Returns: CVEs, severity, affected versions
-```
-
-### IP Allowlisting
-
-**Restrict access by IP:**
-
-```typescript
-import { checkIPAllowed } from '@/lib/services/security-service';
-
-const allowed = await checkIPAllowed(organizationId, ipAddress);
-// Supports CIDR notation
-```
-
----
-
-## 📚 API Documentation
-
-### tRPC Endpoints
-
-**Type-safe API with automatic validation:**
-
-```typescript
-// Client usage
-const review = await trpc.reviews.create.mutate({
-  repositoryId: 'repo-123',
-  prNumber: 42
-});
-
-const reviews = await trpc.reviews.list.query({
-  repositoryId: 'repo-123',
-  limit: 10
-});
-```
-
-**Available Routers:**
-- `reviews` - Code review operations
-- `repositories` - Repository management
-- `teams` - Team collaboration
-- `analytics` - Usage analytics
-- `security` - Security features
-- `admin` - Admin operations
-
-### REST Endpoints
+CodeBear exposes standard endpoints for monitoring integration:
 
 ```bash
-# Webhooks
-POST /api/webhooks/github      # GitHub webhook handler
-POST /api/inngest               # Inngest event handler
+# Health check (database, Redis, GitHub API, memory, disk)
+GET /api/health
 
-# Health & Monitoring
-GET  /api/health                # Full health check
-GET  /api/health/ready          # Readiness probe
-GET  /api/health/live           # Liveness probe
-GET  /api/metrics               # Prometheus metrics
+# Kubernetes probes
+GET /api/health/ready
+GET /api/health/live
+
+# Prometheus metrics scrape endpoint
+GET /api/metrics
 ```
+
+Logs are structured JSON via Pino with correlation IDs. Traces propagate end-to-end from webhook receipt through job completion. See [ARCHITECTURE.md](./docs/ARCHITECTURE.md#observability) for the full stack.
 
 ---
 
-## 🚢 Deployment
+## Deployment
 
-### Vercel (Recommended)
+### Vercel (recommended)
 
 ```bash
-# Install Vercel CLI
 npm i -g vercel
-
-# Deploy
 vercel --prod
 ```
+
+Add your environment variables in the Vercel dashboard. Connect Supabase for PostgreSQL and Redis Cloud for cache.
 
 ### Docker
 
 ```bash
-# Build image
-docker build -t codedolphin .
-
-# Run container
-docker run -p 3000:3000 \
-  -e DATABASE_URL="..." \
-  -e REDIS_URL="..." \
-  codedolphin
+docker build -t codebear .
+docker run -p 3000:3000 -e DATABASE_URL="..." -e REDIS_URL="..." codebear
 ```
 
 ### Kubernetes
 
+Liveness and readiness probes are available at `/api/health/live` and `/api/health/ready`. A sample deployment manifest:
+
 ```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: codedolphin
-spec:
-  replicas: 3
-  template:
-    spec:
-      containers:
-      - name: codedolphin
-        image: codedolphin:latest
-        livenessProbe:
-          httpGet:
-            path: /api/health/live
-            port: 3000
-        readinessProbe:
-          httpGet:
-            path: /api/health/ready
-            port: 3000
+livenessProbe:
+  httpGet:
+    path: /api/health/live
+    port: 3000
+readinessProbe:
+  httpGet:
+    path: /api/health/ready
+    port: 3000
 ```
 
 ---
 
-## 📈 Performance
+## Documentation
 
-### Benchmarks
-
-- **Code Review**: < 5 seconds (average)
-- **API Response**: < 100ms (p95)
-- **Cache Hit Rate**: > 80%
-- **Uptime**: 99.9%
-
-### Optimizations
-
-- Redis caching for frequently accessed data
-- Queue-based async processing
-- Circuit breakers prevent cascading failures
-- Rate limiting protects against abuse
-- Connection pooling for database
+| Document | Description |
+|---|---|
+| [ARCHITECTURE.md](./docs/ARCHITECTURE.md) | System design, component breakdown, data flows, scalability patterns |
+| [DIAGRAMS.md](./docs/DIAGRAMS.md) | PR diagram types: sequence, component hierarchy, dependency graph, state flow |
+| [QUICKSTART.md](./docs/QUICKSTART.md) | Step-by-step local setup and GitHub webhook configuration |
 
 ---
 
-## 🤝 Contributing
+## Performance
 
-Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+| Operation | Typical Time |
+|---|---|
+| Webhook verification | < 10 ms |
+| Fetch changed files (5 files) | ~500 ms |
+| AST parsing | ~100 ms |
+| Static analysis (30+ rules) | ~50 ms |
+| Gemini LLM review + diagrams | ~8–12 s |
+| Post comment to GitHub | ~200 ms |
+| **End-to-end (PR opened → comment posted)** | **~10–14 s** |
 
-### Development Workflow
+Cache hit rate target: > 80%. API response p95: < 100 ms.
 
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open Pull Request
+---
 
-### Code Quality
+## Contributing
 
 ```bash
-# Linting
+# Fork, then create a feature branch
+git checkout -b feature/your-feature
+
+# Make changes, then verify
 npm run lint
-
-# Type checking
 npm run type-check
-
-# Tests
 npm run test
 
-# Format
-npm run format
+# Push and open a pull request
+git push origin feature/your-feature
 ```
 
 ---
 
-## 📄 License
+## License
 
-MIT License - see [LICENSE](LICENSE) file for details
-
----
-
-## 🙏 Acknowledgments
-
-- Built with [Next.js](https://nextjs.org/)
-- Powered by [Google Gemini](https://deepmind.google/technologies/gemini/)
-- Monitored with [Sentry](https://sentry.io/)
-- Metrics with [Prometheus](https://prometheus.io/)
-- Tracing with [OpenTelemetry](https://opentelemetry.io/)
+[MIT](./LICENSE)
 
 ---
 
-## 📞 Contact
-
-**Project Link**: [https://github.com/yourusername/codedolphin](https://github.com/yourusername/codedolphin)
-
-**Live Demo**: [https://codedolphin.vercel.app](https://codedolphin.vercel.app)
-
----
-
-<p align="center">Made with ❤️ for better code reviews</p>
+<div align="center">
+  <img src="./public/codedolphinn.svg" alt="CodeBear" width="40" />
+  <br />
+  <sub>Built for teams that care about code quality</sub>
+</div>
