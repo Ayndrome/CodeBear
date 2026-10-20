@@ -1,0 +1,32 @@
+pipeline {
+    agent any
+    environment {
+
+        IMAGE_NAME = 'test-server'
+        CONTAINER_NAME = 'test-container'
+        DOCKERFILE_URI = '/home/shashank/endtermDev'
+    }
+
+    stages {
+
+        stage('Build docker image from dockerfile') {
+
+            steps {
+
+                sh "docker build -t ${IMAGE_NAME} ${DOCKERFILE_URI}"
+
+
+            }
+
+        }
+
+        stage('Build container and run server') {
+            
+             steps {
+                sh "docker run -d --name ${CONTAINER_NAME} -p 8081:80 ${IMAGE_NAME}"
+             }
+        }
+
+    }
+
+}
